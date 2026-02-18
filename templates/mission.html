@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" class="home-btn" title="На главную">
+            <img src="/static/svgs/home.svg" alt="Home">
+        </a>
+    </header>
+
+    <div class="mission-container">
+        <div class="mission-header-row">
+            <div class="mission-main-info">
+                <h1 class="mission-title">Проект: {{ .Mission.SatelliteName }}</h1>
+                <p class="mission-mass">Масса аппарата: <b>{{ .Mission.SatelliteMassKg }} кг</b></p>
+            </div>
+
+            <div class="calculation-column">
+                <h2 class="calc-header">Параметры системы</h2>
+                
+                <div class="calc-row">
+                    <span class="calc-label">Высота:</span>
+                    <span class="calc-value red">{{ .Mission.CalculatedAltitude }} км</span>
+                </div>
+                
+                <div class="calc-row">
+                    <span class="calc-label">Скорость:</span>
+                    <span class="calc-value green">{{ .Mission.CalculatedVelocity }} км/с</span>
+                </div>
+                
+                <div class="calc-row">
+                    <span class="calc-label">Период:</span>
+                    <span class="calc-value orange">{{ .Mission.CalculatedPeriod }} мин</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">План маневров:</h2>
+        <div class="mission-list">
+            {{ $base := .MinioURL }}
+            {{ range .Mission.SelectedOrbits }}
+            <div class="mission-item-row">
+                <img src="{{ $base }}{{ .Orbit.ImageKey }}" class="mini-thumb">
+                <div class="service-info">
+                    <span class="name">{{ .Orbit.Name }}</span>
+                    <span class="alt">({{ .Orbit.AltitudeKm }} км)</span>
+                </div>
+                <div class="mm-fields">
+                    <span class="priority">Этап: {{ .Priority }}</span>
+                    <span class="comment">{{ .Comment }}</span>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</body>
+</html>
