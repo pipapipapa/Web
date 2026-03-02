@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Параметры орбиты</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body class="vibes-page">
+    <header>
+        <a href="/" class="home-btn"><img src="/static/svgs/home.svg" alt="Home"></a>
+    </header>
+
+    <div class="toolbar">
+        <div class="spacer"></div>
+        {{ if .DraftID }}
+        <a href="/mission/{{ .DraftID }}" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-label">Текущая миссия</span>
+            <span class="mission-count">{{ .MissionCount }}</span>
+        </a>
+        {{ else if .MissionCount }}
+        <a href="/mission/{{ .Mission.ID }}" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-label">Текущая миссия</span>
+            <span class="mission-count">{{ .MissionCount }}</span>
+        </a>
+        {{ end }}
+        <div class="spacer"></div>
+    </div>
+
+    <div class="detail-container">
+        <div class="grid-spacer"></div>
+
+        <div class="vibes-card">
+            <video autoplay muted loop playsinline class="bg-video">
+                <source src="{{ .MinioURL }}{{ .Orbit.VideoKey }}" type="video/mp4">
+            </video>
+            <div class="vibes-overlay">
+                <h1>{{ .Orbit.Name }}</h1>
+                <div class="stat-sub">{{ .Orbit.Description }} - {{ .Orbit.AltitudeKm }}, км</div>
+            </div>
+        </div>
+        <div class="grid-spacer"></div>
+        <div class="grid-spacer"></div>
+        <div>
+            <form action="/mission/add" method="POST" class="add-action-form">
+                    <!-- Передаем ID услуги скрытым полем -->
+                    <input type="hidden" name="orbit_id" value="{{ .Orbit.ID }}">
+                    
+                    <div class="panel-controls">
+                        <!-- Кнопки управления как на сайте -->
+                        <button type="submit" class="calc-btn">
+                            ВКЛЮЧИТЬ В ПЛАН
+                        </button>
+                    </div>
+                </form>
+        </div>
+    </div>  
+</body>
+</html>

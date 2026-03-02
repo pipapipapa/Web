@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Orbit Selector</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" class="home-btn" title="На главную">
+            <img src="/static/svgs/home.svg" alt="Home">
+        </a>
+    </header>
+
+    <div class="toolbar">
+         {{ if .DraftID }}
+        <a href="/mission/{{ .DraftID }}" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-label">Текущая миссия</span>
+            <span class="mission-count">{{ .MissionCount }}</span>
+        </a>
+        {{ else if .MissionCount }}
+        <a href="/mission/{{ .Mission.ID }}" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-label">Текущая миссия</span>
+            <span class="mission-count">{{ .MissionCount }}</span>
+        </a>
+        {{ end }}
+
+        <div class="spacer"></div>
+
+        <form action="/" method="GET" class="search-form">
+            <input type="text" name="q" value="{{ .Query }}" placeholder="Фильтр орбит...">
+            <button type="submit" class="search-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            </button>
+        </form>
+    </div>
+
+    <div class="container">
+
+        <div class="grid">
+            {{ $base := .MinioURL }}
+            {{ range .Orbits }}
+            <a href="/orbit/{{ .ID }}" class="card orbit-card">
+                <img src="{{ $base }}{{ .ImageKey }}" alt="{{ .Name }}">
+                <div class="card-info">
+                    <h3>{{ .Name }}</h3>
+                    <p>Высота: ~{{ .AltitudeKm }} км</p>
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    </div>
+</body>
+</html>
