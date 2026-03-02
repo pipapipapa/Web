@@ -11,49 +11,56 @@
     </header>
 
     <div class="mission-container">
-        <div class="mission-header-row">
-            <div class="mission-main-info">
-                <h1 class="mission-title">Проект: {{ .Mission.SatelliteName }}</h1>
-                <p class="mission-mass">Масса аппарата: <b>{{ .Mission.SatelliteMassKg }} кг</b></p>
-            </div>
 
-            <div class="calculation-column">
-                <h2 class="calc-header">Параметры системы</h2>
-                
-                <div class="calc-row">
-                    <span class="calc-label">Высота:</span>
-                    <span class="calc-value red">{{ .Mission.CalculatedAltitude }} км</span>
-                </div>
-                
-                <div class="calc-row">
-                    <span class="calc-label">Скорость:</span>
-                    <span class="calc-value green">{{ .Mission.CalculatedVelocity }} км/с</span>
-                </div>
-                
-                <div class="calc-row">
-                    <span class="calc-label">Период:</span>
-                    <span class="calc-value orange">{{ .Mission.CalculatedPeriod }} мин</span>
-                </div>
-            </div>
+    <div class="mission-header-row">
+        <div class="mission-main-info">
+            <h1 class="mission-title">Проект: {{ .Mission.SatelliteName }}</h1>
+            <p class="mission-mass">Масса аппарата: <b>{{ .Mission.SatelliteMassKg }} кг</b></p>
         </div>
-
-        <h2 class="section-title">План маневров:</h2>
-        <div class="mission-list">
-            {{ $base := .MinioURL }}
-            {{ range .Mission.SelectedOrbits }}
-            <div class="mission-item-row">
-                <img src="{{ $base }}{{ .Orbit.ImageKey }}" class="mini-thumb">
-                <div class="service-info">
-                    <span class="name">{{ .Orbit.Name }}</span>
-                    <span class="alt">({{ .Orbit.AltitudeKm }} км)</span>
-                </div>
-                <div class="mm-fields">
-                    <span class="priority">Этап: {{ .Priority }}</span>
-                    <span class="comment">{{ .Comment }}</span>
-                </div>
-            </div>
-            {{ end }}
+        <div class="calculation-column">
+            <p class="mission-velocity">Расчетная скорость аппарата: <b class="calc-value green">{{ .Mission.CalculatedVelocity }} кг</b></p>
+            <p class="mission-period">Расчетный период вращения аппарата: <b class="calc-value orange">{{ .Mission.CalculatedPeriod }} кг</b></p>
         </div>
     </div>
+
+    <h2 class="section-title">План миссии (Этапы):</h2>
+
+    <div class="orbit-mission-table-card">
+        <div class="orbit-misssion-table-header">
+            <div class="orbit-misssion-col-visual"> Вид</div>
+            <div class="orbit-misssion-col-stage">Этап</div>
+            <div class="orbit-misssion-col-orbit">Орбита</div>
+            <div class="orbit-misssion-col-payload">Задачи этапа</div>
+            <div class="orbit-misssion-col-resource">ΔV</div>
+        </div>
+
+        {{ $base := .MinioURL }}
+        {{ range .Mission.SelectedOrbits }}
+        <div class="orbit-misssion-table-row">
+            <div class="orbit-misssion-col-visual">
+                <img src="{{ $base }}{{ .Orbit.ImageKey }}" alt="orbit">
+            </div>
+            
+            <div class="orbit-misssion-col-stage">
+                <span class="orbit-misssion-stage-badge">{{ .StageOrder }}</span>
+            </div>
+
+            <div class="orbit-misssion-col-orbit">
+                <div class="orbit-name">{{ .Orbit.Name }}</div>
+                <div class="orbit-meta">H = {{ .Orbit.AltitudeKm }} км</div>
+            </div>
+
+            <div class="orbit-misssion-col-payload">
+                {{ .PayloadDescription }}
+            </div>
+
+            <div class="orbit-misssion-col-resource">
+                <span class="calc-value red">{{ .DeltaV }}</span> км/с
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+</div>
 </body>
 </html>

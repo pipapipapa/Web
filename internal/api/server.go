@@ -17,7 +17,7 @@ func StartServer() {
 
 	router.GET("/", h.GetOrbits)
 	router.GET("/orbit/:id", h.GetOrbitDetail)
-	router.GET("/mission/:id", h.GetMission)
+	router.GET("/mission/:id", h.GetOrbitMission)
 
 	if err := router.Run(":8080"); err != nil {
 		logrus.Error(err)

@@ -13,21 +13,22 @@ type OrbitType struct {
 	Period      float64 
 }
 
-type MissionProject struct {
-	ID              int
-	SatelliteName   string
-	SatelliteMassKg int
-	CalculatedPeriod float64
-	CalculatedVelocity float64
-	CalculatedAltitude int
+type OrbitMissionProject struct {
+	ID              	int
+	SatelliteName  		string
+	SatelliteMassKg	 	int
+	CalculatedPeriod 	float64
+	CalculatedVelocity 	float64
+	CalculatedAltitude 	int
 	
-	SelectedOrbits  []MissionOrbitItem 
+	SelectedOrbits  	[]OrbitMissionItem 
 }
 
-type MissionOrbitItem struct {
-	Orbit    OrbitType
-	Priority int
-	Comment  string 
+type OrbitMissionItem struct {
+	Orbit    			OrbitType
+	StageOrder			int
+	PayloadDescription 	string
+	DeltaV 		float64
 }
 
 const MinioBaseURL = "http://127.0.0.1:9000/orbits/"

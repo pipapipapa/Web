@@ -3,11 +3,11 @@
     --bg-card: #1f2937;
     --border-color: #3a3f58;
     --border-light: #333333;
-    
+
     --text-header: #ffffff;
     --text-main: #9ca3af;
     --text-gray: #64748b;
-    
+
     --accent: #ffffff;
     --accent-blue: #3b82f6;
     --accent-green: #86efac;
@@ -20,7 +20,10 @@ body {
     color: var(--text-main);
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -35,10 +38,10 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
-    gap: 20px;  
+    gap: 10px;
 }
 
 header .home-btn img {
@@ -60,7 +63,28 @@ header .home-btn:hover img {
     box-shadow: 0 0 5px #ffffff33;
 }
 
-header .header-mission-link {
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 20px;
+}
+
+.toolbar img {
+    width: 30px;
+    height: 30px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 25px;
+    box-sizing: content-box;
+    opacity: 0.7;
+    transition: all 1s ease;
+}
+
+.toolbar .header-mission-link {
     background: #000000;
     border: 1px solid #ffffff66;
     padding: 8px 20px;
@@ -71,31 +95,31 @@ header .header-mission-link {
     transition: border-color 0.2s;
 }
 
-header .header-mission-link:hover {
+.toolbar .header-mission-link:hover {
     border-color: var(--accent-blue);
     color: var(--accent-blue);
 }
 
-header .mission-label {
+.toolbar .mission-label {
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--text-gray);
 }
 
-header .mission-count {
+.toolbar .mission-count {
     color: var(--accent-green);
     font-weight: bold;
     font-size: 16px;
 }
 
-header .search-form {
+.toolbar .search-form {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-header input[type="text"] {
+.toolbar input[type="text"] {
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -105,7 +129,7 @@ header input[type="text"] {
     width: 250px;
 }
 
-header .search-btn {
+.toolbar .search-btn {
     background: #0000008c;
     border: 1px solid #ffffff33;
     color: var(--text-main);
@@ -122,13 +146,13 @@ header .search-btn {
     padding: 0;
 }
 
-header .search-btn:hover {
+.toolbar .search-btn:hover {
     background: #000000bf;
     transform: scale(1.1);
     color: var(--accent);
 }
 
-header .spacer {
+.spacer {
     flex-grow: 1;
 }
 
@@ -219,26 +243,10 @@ header .spacer {
     font-size: 28px;
 }
 
-.side-panel {
-    width: 260px;
-    background: #000000;
-    border: 1px solid #333333;
-    border-radius: 12px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, sans-serif;
-}
 
-.panel-title {
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 5px 0 12px 0;
-    color: #ffffff;
-}
 
 .panel-divider {
+    width: 350px;
     height: 1px;
     background: #333333;
     margin: 5px 0 15px 0;
@@ -275,8 +283,9 @@ header .spacer {
 }
 
 .panel-controls {
+    width: 350px;
     display: flex;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .calc-btn {
@@ -302,6 +311,9 @@ header .spacer {
 .mission-container {
     max-width: 900px;
     margin: 0 auto;
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    overflow: hidden;
 }
 
 .mission-header-row {
@@ -309,22 +321,9 @@ header .spacer {
     justify-content: space-between;
     align-items: flex-start;
     background: var(--bg-color);
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
     padding: 30px;
-    margin-bottom: 40px;
 }
 
-.mission-title {
-    font-size: 28px;
-    margin: 0 0 10px 0;
-    color: #f8fafc;
-}
-
-.mission-mass {
-    color: var(--text-main);
-    font-size: 16px;
-}
 
 .calculation-column {
     min-width: 220px;
@@ -355,75 +354,122 @@ header .spacer {
     font-size: 16px;
 }
 
-.calc-value {
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 16px;
+.calc-value.orange {
+    color: var(--accent-orange);
 }
 
-.calc-value.orange { color: var(--accent-orange); }
-.calc-value.green { color: var(--accent-green); }
-.calc-value.red { color: var(--accent-red); }
+.calc-value.green {
+    color: var(--accent-green);
+}
 
-.stat-color.red {background: #ff0000;}
-.stat-color.orange {background:#FF8000;}
-.stat-color.yellow {background:#ffff00;}
-.stat-color.green {background:#00ff00;}
-.stat-color.blue {background:#0000ff;}
+.calc-value.red {
+    color: var(--accent-red);
+}
+
+.stat-color.red {
+    background: #ff0000;
+}
+
+.stat-color.orange {
+    background: #FF8000;
+}
+
+.stat-color.yellow {
+    background: #ffff00;
+}
+
+.stat-color.green {
+    background: #00ff00;
+}
+
+.stat-color.blue {
+    background: #0000ff;
+}
+
+.stat-color.white {
+    background: #ffffff;
+}
 
 .section-title {
-    margin-bottom: 25px;
-    font-size: 20px;
-    border-left: 3px solid var(--accent-blue);
-    padding-left: 15px;
-    color: var(--text-header);
+    padding-left: 30px;
+};
+
+.orbit-mission-table-card {
+    background: var(--card-bg);
+    margin-bottom: 40px;
+    padding: 20px;
 }
 
-.mission-item-row {
-    display: flex;
+.orbit-misssion-table-header, .orbit-misssion-table-row {
+    display: grid;
+    grid-template-columns: 70px 60px 2fr 3fr 120px;
     align-items: center;
-    background: var(--bg-card);
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 8px;
-    gap: 15px;
+    padding: 15px 20px;
+    gap: 20px;
 }
 
-.mission-item-row .mini-thumb {
-    width: 60px;
-    height: 60px;
+.orbit-misssion-table-header {
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-gray);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.orbit-misssion-table-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: background 0.2s;
+}
+
+.orbit-misssion-table-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.orbit-misssion-table-row:last-child {
+    border-bottom: none;
+}
+
+.orbit-misssion-col-visual img {
+    width: 50px;
+    height: 50px;
     border-radius: 6px;
     object-fit: cover;
+    border: 1px solid var(--border-light);
 }
 
-.mission-item-row .service-info {
-    flex-grow: 1;
-}
-
-.service-info .name {
-    font-weight: bold;
-    color: var(--text-header);
-    display: block;
-}
-
-.service-info .alt {
-    color: var(--text-main);
-    font-size: 14px;
-}
-
-.mission-item-row .mm-fields {
-    text-align: right;
+.orbit-misssion-stage-badge {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.mm-fields .priority {
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    color: var(--accent-blue);
     font-weight: bold;
-    color: var(--accent);
+    font-size: 14px;
 }
 
-.mm-fields .comment {
-    font-size: 14px;
+.orbit-name {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.orbit-meta {
     color: var(--text-gray);
+    font-size: 12px;
+}
+
+.orbit-mission-col-payload {
+    color: var(--accent);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.orbit-mission-col-resource {
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    color: var(--text-gray);
+    font-size: 12px;
 }

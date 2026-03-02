@@ -7,12 +7,17 @@
 <body class="vibes-page">
     <header>
         <a href="/" class="home-btn"><img src="/static/svgs/home.svg" alt="Home"></a>
+    </header>
+
+    <div class="toolbar">
+        <div class="spacer"></div>
         <a href="/mission/101" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
             <span class="mission-label">Текущая миссия</span>
-            <span class="mission-count">2</span>
+            <span class="mission-count">{{ .MissionCount }}</span>
         </a>
         <div class="spacer"></div>
-    </header>
+    </div>
 
     <div class="detail-container">
         <div class="grid-spacer"></div>
@@ -23,69 +28,16 @@
             </video>
             <div class="vibes-overlay">
                 <h1>{{ .Orbit.Name }}</h1>
+                <div class="stat-sub">{{ .Orbit.Description }} - {{ .Orbit.AltitudeKm }}, км</div>
             </div>
         </div>
-
-        <div class="side-panel">
-            <h2 class="panel-title">Характеристики</h2>
-            <div class="panel-divider"></div>
-
-            <div class="stat-row">
-                <div class="stat-info">
-                    <div class="stat-color red"></div>
-                    <div>
-                        <div class="stat-label">Тип орбиты</div>
-                        <div class="stat-sub">{{ .Orbit.Type }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-row">
-                <div class="stat-info">
-                    <div class="stat-color orange"></div>
-                    <div>
-                        <div class="stat-label">Допустимый вес</div>
-                        <div class="stat-sub">{{ .Orbit.Weight }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-row">
-                <div class="stat-info">
-                    <div class="stat-color yellow"></div>
-                    <div>
-                        <div class="stat-label">Ожидаемая высота</div>
-                        <div class="stat-sub">{{ .Orbit.AltitudeKm }} км</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-row">
-                <div class="stat-info">
-                    <div class="stat-color green"></div>
-                    <div>
-                        <div class="stat-label">Ожидаемая скорость</div>
-                        <div class="stat-sub">{{ .Orbit.Velocity }} км/с</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-row">
-                <div class="stat-info">
-                    <div class="stat-color blue"></div>
-                    <div>
-                        <div class="stat-label">Ожидаемый период</div>
-                        <div class="stat-sub">{{ .Orbit.Period }} мин.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel-divider"></div>
-
+        <div class="grid-spacer"></div>
+        <div class="grid-spacer"></div>
+        <div>
             <div class="panel-controls">
                 <a href="/mission/101" class="calc-btn">РАСЧЕТ</a>
             </div>
         </div>
-    </div>
+    </div>  
 </body>
 </html>
