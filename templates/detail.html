@@ -43,11 +43,9 @@
         <div class="grid-spacer"></div>
         <div>
             <form action="/mission/add" method="POST" class="add-action-form">
-                    <!-- Передаем ID услуги скрытым полем -->
                     <input type="hidden" name="orbit_id" value="{{ .Orbit.ID }}">
                     
                     <div class="panel-controls">
-                        <!-- Кнопки управления как на сайте -->
                         <button type="submit" class="calc-btn">
                             ВКЛЮЧИТЬ В ПЛАН
                         </button>

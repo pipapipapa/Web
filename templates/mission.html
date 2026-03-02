@@ -13,98 +13,52 @@
     <div class="mission-container">
         {{ if .Mission }}
         
-        <!-- Оборачиваем всё в форму для сохранения данных -->
-        <form action="{{ if eq .Mission.Status "DRAFT" }}/mission/form{{ else }}/mission/complete{{ end }}" method="POST">
-            <input type="hidden" name="mission_id" value="{{ .Mission.ID }}">
+        <div class="mission-summary">
+            <h1>Проект Миссии #{{ .Mission.ID }}</h1>
+            <p>Масса спутника: <b>{{ .Mission.SatelliteMassKg }} кг</b></p>
+        </div>
 
-            <div class="mission-header-row">
-                <div class="mission-main-info">
-                    <h1 class="mission-title">Проект №{{ .Mission.ID }}</h1>
-                    
-                    <div class="summary-inputs">
-                        <span class="label">Масса аппарата:</span>
-                        {{ if eq .Mission.Status "DRAFT" }}
-                            <input type="number" name="mass" value="1000" class="input-inline" required> <b>кг</b>
-                        {{ else }}
-                            <b>{{ .Mission.SatelliteMassKg }} кг</b>
-                        {{ end }}
-                    </div>
-                </div>
+        <h2 class="section-title">План маневров:</h2>
 
-                <!-- КНОПКА ДЕЙСТВИЯ В ПРАВОМ ВЕРХНЕМ УГЛУ -->
-                <div class="mission-action-block">
-                    {{ if eq .Mission.Status "DRAFT" }}
-                        <button type="submit" class="btn-action-main btn-form">СФОРМИРОВАТЬ</button>
-                    {{ else if eq .Mission.Status "FORMED" }}
-                        <button type="submit" class="btn-action-main btn-calc">РАССЧИТАТЬ</button>
-                    {{ else }}
-                        <div class="status-badge-final">ЗАВЕРШЕНО</div>
-                    {{ end }}
-                </div>
+        <div class="mission-list">
+            <div class="mission-item-row header-row">
+                <div class="service-info">Вид</div>
+                <div class="service-info">Орбита (Услуга)</div>
+                <div class="mm-fields">Полезная нагрузка</div>
+                <div class="res-fields">Расчеты</div>
             </div>
 
-            <h2 class="section-title">Состав маневров:</h2>
-
-            <div class="mission-list">
-                <!-- Заголовки -->
-                <div class="mission-item-row header-row">
-                    <div class="mini-thumb">Вид</div>
-                    <div class="service-info">Орбита (Услуга)</div>
-                    <div class="mm-fields">Полезная нагрузка (М-М)</div>
-                    <div class="res-fields">Расчеты</div>
-                    <div class="action-fields"></div>
+            {{ $base := .MinioURL }}
+            {{ range .Mission.OrbitItems }}
+            <div class="mission-item-row">
+                <img src="{{ $base }}{{ .Orbit.ImageKey }}" class="mini-thumb">
+                
+                <div class="service-info">
+                    <span class="name">{{ .Orbit.Name }}</span>
+                    <span class="alt">({{ .Orbit.AltitudeKm }} км)</span>
+                </div>
+                
+                <div class="mm-fields">
+                    <span class="payload-text">{{ .Payload }}</span>
                 </div>
 
-                {{ $base := .MinioURL }}
-                {{ range .Mission.OrbitItems }}
-                <div class="mission-item-row">
-                    <img src="{{ $base }}{{ .Orbit.ImageKey }}" class="mini-thumb">
-                    
-                    <div class="service-info">
-                        <span class="name">{{ .Orbit.Name }}</span>
-                        <span class="alt">H = {{ .Orbit.AltitudeKm }} км</span>
-                    </div>
-                    
-                    <div class="mm-fields">
-                        {{ if eq $.Mission.Status "DRAFT" }}
-                            <input type="text" name="payload_{{ .OrbitID }}" placeholder="Задачи этапа..." class="input-table" required>
-                        {{ else }}
-                            <span class="payload-text">{{ .Payload }}</span>
-                        {{ end }}
-                    </div>
-
-                    <div class="res-fields">
-                        {{ if eq $.Mission.Status "COMPLETED" }}
-                            <span class="res-item">V: <b>{{ printf "%.2f" .Velocity }}</b> км/с</span>
-                            <span class="res-item">T: <b>{{ printf "%.1f" .Period }}</b> мин</span>
-                        {{ else }}
-                            <span class="res-item">---</span>
-                        {{ end }}
-                    </div>
-
-                    <div class="action-fields">
-                        {{ if eq $.Mission.Status "DRAFT" }}
-                        <!-- Кнопка удаления остается отдельной формой, но мы можем сделать ее через POST-ссылку -->
-                        <button type="submit" formaction="/mission/remove-item" name="orbit_id" value="{{ .OrbitID }}" class="item-delete-btn">×</button>
-                        {{ end }}
-                    </div>
+                <div class="res-fields">
+                    <span class="res-item">V: {{ printf "%.2f" .Velocity }} км/с</span>
+                    <span class="res-item">T: {{ printf "%.1f" .Period }} мин</span>
                 </div>
-                {{ end }}
             </div>
-        </form>
-
-        <!-- Кнопка удаления (SQL UPDATE) всегда снизу -->
-        {{ if ne .Mission.Status "COMPLETED" }}
+            {{ end }}
+        </div>
+        
+        <!-- Кнопка удаления всей миссии -->
         <form action="/mission/delete" method="POST" class="full-delete-form">
             <input type="hidden" name="mission_id" value="{{ .Mission.ID }}">
-            <button type="submit" class="full-delete-btn">УДАЛИТЬ ПРОЕКТ</button>
+            <button type="submit" class="full-delete-btn">Аннулировать проект (SQL UPDATE)</button>
         </form>
-        {{ end }}
 
         {{ else }}
         <div class="empty-mission">...</div>
         {{ end }}
     </div>
-
 </body>
 </html>

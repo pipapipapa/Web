@@ -16,7 +16,6 @@ func NewHandler(r *repository.Repository) *Handler {
 	}
 }
 
-// RegisterRoutes - регистрирует все маршруты приложения
 func (h *Handler) RegisterRoutes(router *gin.Engine) {
 	router.GET("/", h.ShowOrbitsPage)
 	router.GET("/orbit/:id", h.ShowOrbitDetailPage)
@@ -24,12 +23,8 @@ func (h *Handler) RegisterRoutes(router *gin.Engine) {
 
 	router.POST("/mission/add", h.AddOrbitToMission) 
 	router.POST("/mission/delete", h.DeleteMission)
-	router.POST("/mission/remove-item", h.RemoveItem)
-	router.POST("/mission/form", h.FormMission)
-	router.POST("/mission/complete", h.CompleteMission)
 }
 
-// RegisterTemplates - регистрирует статику и шаблоны
 func (h *Handler) RegisterTemplates(router *gin.Engine) {
 	router.LoadHTMLGlob("templates/*")
 	router.Static("/static", "./resources")

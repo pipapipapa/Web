@@ -321,7 +321,7 @@ header .home-btn:hover img {
     justify-content: space-between;
     align-items: flex-start;
     background: var(--bg-color);
-    padding: 30px;
+    padding-left: 30px;
 }
 
 
@@ -391,7 +391,7 @@ header .home-btn:hover img {
 }
 
 .section-title {
-    padding-left: 30px;
+    padding-left: 20px;
 };
 
 .orbit-mission-table-card {
@@ -504,6 +504,7 @@ header .home-btn:hover img {
     height: 50px;
     border-radius: 6px;
     object-fit: cover;
+    justify-content: center;
 }
 .header-row .mini-thumb {
     background: none; /* Убираем фон у заглушки */
@@ -612,4 +613,8 @@ header .home-btn:hover img {
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.3s;
+}
+
+.mission-summary {
+    padding: 20px;
 }
