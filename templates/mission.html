@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body>
+    <header>
+        <a href="/" class="home-btn" title="На главную">
+            <img src="/static/svgs/home.svg" alt="Home">
+        </a>
+    </header>
+
+    <div class="mission-container">
+        {{ if .Mission }}
+        
+        <div class="mission-summary">
+            <h1>Проект Миссии #{{ .Mission.ID }}</h1>
+            <p>Масса спутника: <b>{{ .Mission.SatelliteMassKg }} кг</b></p>
+        </div>
+
+        <h2 class="section-title">План маневров:</h2>
+
+        <div class="mission-list">
+            <div class="mission-item-row header-row">
+                <div class="service-info">Вид</div>
+                <div class="service-info">Орбита (Услуга)</div>
+                <div class="mm-fields">Полезная нагрузка</div>
+                <div class="res-fields">Расчеты</div>
+            </div>
+
+            {{ $base := .MinioURL }}
+            {{ range .Mission.OrbitItems }}
+            <div class="mission-item-row">
+                <img src="{{ $base }}{{ .Orbit.ImageKey }}" class="mini-thumb">
+                
+                <div class="service-info">
+                    <span class="name">{{ .Orbit.Name }}</span>
+                    <span class="alt">({{ .Orbit.AltitudeKm }} км)</span>
+                </div>
+                
+                <div class="mm-fields">
+                    <span class="payload-text">{{ .Payload }}</span>
+                </div>
+
+                <div class="res-fields">
+                    <span class="res-item">V: {{ printf "%.2f" .Velocity }} км/с</span>
+                    <span class="res-item">T: {{ printf "%.1f" .Period }} мин</span>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+        
+        <!-- Кнопка удаления всей миссии -->
+        <form action="/mission/delete" method="POST" class="full-delete-form">
+            <input type="hidden" name="mission_id" value="{{ .Mission.ID }}">
+            <button type="submit" class="full-delete-btn">Аннулировать проект</button>
+        </form>
+
+        {{ else }}
+        <div class="empty-mission">...</div>
+        {{ end }}
+    </div>
+</body>
+</html>
