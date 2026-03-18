@@ -18,6 +18,12 @@
             <p>Масса спутника: <b>{{ .Mission.SatelliteMassKg }} кг</b></p>
         </div>
 
+                <!-- Кнопка удаления всей миссии -->
+        <form action="/mission/delete" method="POST" class="full-delete-form">
+            <input type="hidden" name="mission_id" value="{{ .Mission.ID }}">
+            <button type="submit" class="full-delete-btn">Аннулировать проект</button>
+        </form>
+
         <h2 class="section-title">План маневров:</h2>
 
         <div class="mission-list">
@@ -28,9 +34,20 @@
                 <div class="res-fields">Скорость</div>
                 <div class="res-fields">Период</div>
             </div>
+        </div>
 
-            {{ $base := .MinioURL }}
+
+        
+
+
+        {{ else }}
+        <div class="empty-mission">...</div>
+        {{ end }}
+    </div>
+
+    {{ $base := .MinioURL }}
             {{ range .Mission.OrbitItems }}
+        <div class="mission-container">
             <div class="mission-item-row">
                 <img src="{{ $base }}{{ .Orbit.ImageKey }}" class="mini-thumb">
                 
@@ -51,18 +68,8 @@
                     <span class="res-item">{{ printf "%.1f" .Period }} мин</span>
                 </div>
             </div>
-            {{ end }}
         </div>
-        
-        <!-- Кнопка удаления всей миссии -->
-        <form action="/mission/delete" method="POST" class="full-delete-form">
-            <input type="hidden" name="mission_id" value="{{ .Mission.ID }}">
-            <button type="submit" class="full-delete-btn">Аннулировать проект</button>
-        </form>
+            {{ end }}
 
-        {{ else }}
-        <div class="empty-mission">...</div>
-        {{ end }}
-    </div>
 </body>
 </html>
