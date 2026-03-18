@@ -23,14 +23,14 @@ func (h *Handler) API_GetOrbits(c *gin.Context) {
 
 func (h *Handler) API_GetOrbitDetail(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	
+
 	var orbit ds.OrbitType
 	err := h.Repository.DB().First(&orbit, id).Error
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Услуга не найдена"})
 		return
 	}
-	
+
 	c.JSON(200, gin.H{"data": orbit})
 }
 
@@ -51,7 +51,7 @@ func (h *Handler) API_AddOrbit(c *gin.Context) {
 	if err == nil {
 		ext := filepath.Ext(imageFile.Filename)
 		imgName := fmt.Sprintf("img_%d%s", time.Now().Unix(), ext)
-		
+
 		if err := h.Repository.UploadFileToMinio(imageFile, imgName); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка загрузки картинки в Minio"})
 			return
@@ -63,7 +63,7 @@ func (h *Handler) API_AddOrbit(c *gin.Context) {
 	if err == nil {
 		ext := filepath.Ext(videoFile.Filename)
 		vidName := fmt.Sprintf("vid_%d%s", time.Now().Unix(), ext)
-		
+
 		if err := h.Repository.UploadFileToMinio(videoFile, vidName); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка загрузки видео в Minio"})
 			return
@@ -79,7 +79,7 @@ func (h *Handler) API_AddOrbit(c *gin.Context) {
 		VideoKey:    videoKey,
 		Status:      "ACTIVE",
 	}
-	
+
 	if err := h.Repository.DB().Create(&orbit).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка сохранения в БД"})
 		return
@@ -94,11 +94,11 @@ func (h *Handler) API_AddOrbit(c *gin.Context) {
 // М-М
 
 type M2MRequest struct {
-	OrbitID    uint    `json:"orbit_id"`
-	Payload    float64 `json:"payload_tons"`
+	OrbitID uint    `json:"orbit_id"`
+	Payload float64 `json:"payload_tons"`
 }
 
-func (h *Handler) API_AddM2M(c *gin.Context) {
+func (h *Handler) API_AddMissionOrbitItem(c *gin.Context) {
 	userID := auth.GetCurrentUserID()
 	var req M2MRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -107,18 +107,20 @@ func (h *Handler) API_AddM2M(c *gin.Context) {
 	}
 
 	mission, _ := h.Repository.GetOrCreateDraftMission(userID)
-	
+
 	item := ds.MissionOrbitItem{
 		MissionID: mission.ID, OrbitID: req.OrbitID,
 	}
-	
+
 	h.Repository.DB().Create(&item)
 	c.JSON(201, gin.H{"message": "Добавлено в заявку"})
 }
 
-func (h *Handler) API_DeleteM2M(c *gin.Context) {
+func (h *Handler) API_DeleteMissionOrbitItem(c *gin.Context) {
 	userID := auth.GetCurrentUserID()
-	var req struct { OrbitID uint `json:"orbit_id"` }
+	var req struct {
+		OrbitID uint `json:"orbit_id"`
+	}
 	c.ShouldBindJSON(&req)
 
 	mission, _ := h.Repository.GetOrCreateDraftMission(userID)
@@ -127,11 +129,11 @@ func (h *Handler) API_DeleteM2M(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Удалено из заявки"})
 }
 
-func (h *Handler) API_UpdateM2M(c *gin.Context) {
+func (h *Handler) API_UpdateMissionOrbitItem(c *gin.Context) {
 	userID := auth.GetCurrentUserID()
 
 	var req M2MRequest
-	
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверный формат данных: " + err.Error()})
 		return
@@ -150,17 +152,17 @@ func (h *Handler) API_UpdateM2M(c *gin.Context) {
 
 // Заявки
 
-func (h *Handler) API_GetDraft(c *gin.Context) {
+func (h *Handler) API_GetMissionDraft(c *gin.Context) {
 	userID := auth.GetCurrentUserID()
 	mission, err := h.Repository.GetOrCreateDraftMission(userID)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "DB error"})
 		return
 	}
-	
+
 	var count int64
 	h.Repository.DB().Model(&ds.MissionOrbitItem{}).Where("mission_id = ?", mission.ID).Count(&count)
-	
+
 	c.JSON(200, gin.H{"draft_id": mission.ID, "items_count": count})
 }
 
@@ -175,25 +177,27 @@ func (h *Handler) API_GetMissionsList(c *gin.Context) {
 
 func (h *Handler) API_GetMissionDetail(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	
+
 	var mission ds.Mission
 	err := h.Repository.DB().
 		Preload("OrbitItems.Orbit").
 		First(&mission, id).Error
-		
+
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Заявка не найдена"})
 		return
 	}
-	
+
 	c.JSON(200, gin.H{"data": mission})
 }
 
 func (h *Handler) API_UpdateMission(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var req struct { SatelliteMassKg int `json:"satellite_mass_kg"` }
+	var req struct {
+		SatelliteMassKg int `json:"satellite_mass_kg"`
+	}
 	c.ShouldBindJSON(&req)
-	
+
 	h.Repository.DB().Model(&ds.Mission{}).Where("id = ?", id).Update("satellite_mass_kg", req.SatelliteMassKg)
 	c.JSON(200, gin.H{"message": "Обновлено"})
 }
@@ -209,30 +213,32 @@ func (h *Handler) API_FormMission(c *gin.Context) {
 
 func (h *Handler) API_CompleteMission(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	
-	var req struct { Action string `json:"action"` }
+
+	var req struct {
+		Action string `json:"action"`
+	}
 	c.ShouldBindJSON(&req)
 
 	reject := req.Action == "REJECT"
-	
+
 	err := h.Repository.CompleteMission(uint(id), auth.GetCurrentModeratorID(), reject)
-	
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"message": "Заявка обработана модератором"})
 }
 
 func (h *Handler) API_DeleteMission(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	
+
 	err := h.Repository.DB().Exec("UPDATE missions SET status = 'DELETED' WHERE id = ?", id).Error
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Ошибка при удалении заявки"})
 		return
 	}
-	
+
 	c.JSON(200, gin.H{"message": "Заявка успешно удалена"})
 }
