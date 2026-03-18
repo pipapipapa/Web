@@ -25,7 +25,8 @@
                 <div class="service-info">Вид</div>
                 <div class="service-info">Орбита (Услуга)</div>
                 <div class="mm-fields">Полезная нагрузка</div>
-                <div class="res-fields">Расчеты</div>
+                <div class="res-fields">Скорость</div>
+                <div class="res-fields">Период</div>
             </div>
 
             {{ $base := .MinioURL }}
@@ -43,8 +44,11 @@
                 </div>
 
                 <div class="res-fields">
-                    <span class="res-item">V: {{ printf "%.2f" .Velocity }} км/с</span>
-                    <span class="res-item">T: {{ printf "%.1f" .Period }} мин</span>
+                    <span class="res-item">{{ printf "%.2f" .Velocity }} км/с</span>
+                </div>
+                
+                <div class="res-fields">
+                    <span class="res-item">{{ printf "%.1f" .Period }} мин</span>
                 </div>
             </div>
             {{ end }}

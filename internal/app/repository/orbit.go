@@ -51,7 +51,7 @@ func (r *Repository) GetOrCreateDraftMission(userID uint) (*ds.Mission, error) {
 	return &mission, err
 }
 
-func (r *Repository) AddOrbitToMission(missionID, orbitID uint, payload string) error {
+func (r *Repository) AddOrbitToMission(missionID, orbitID uint) error {
 	var orbit ds.OrbitType
 	r.db.First(&orbit, orbitID)
 
@@ -65,7 +65,6 @@ func (r *Repository) AddOrbitToMission(missionID, orbitID uint, payload string) 
 	item := ds.MissionOrbitItem{
 		MissionID: missionID,
 		OrbitID:   orbitID,
-		Payload:   payload,
 		Velocity:  velocity,
 		Period:    period,
 	}

@@ -101,7 +101,7 @@ func (h *Handler) AddOrbitToMission(c *gin.Context) {
 		return
 	}
 
-	err = h.Repository.AddOrbitToMission(mission.ID, uint(orbitID), "Стандартная научная нагрузка")
+	err = h.Repository.AddOrbitToMission(mission.ID, uint(orbitID))
 	if err != nil {
 		log.Println("Предупреждение:", err)
 	}

@@ -478,7 +478,7 @@ header .home-btn:hover img {
 .mission-item-row {
     display: grid;
     /* Сетка: 60px | 2fr | 2fr | 1.5fr | 60px */
-    grid-template-columns: 60px 2fr 2fr 1.5fr 60px;
+    grid-template-columns: 90px 2.5fr 1fr 1fr 80px;
     align-items: center;
     background: var(--card-blue);
     margin-bottom: 10px;
@@ -500,8 +500,8 @@ header .home-btn:hover img {
 
 /* --- КОЛОНКИ --- */
 .mini-thumb {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     border-radius: 6px;
     object-fit: cover;
     justify-content: center;

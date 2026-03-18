@@ -4,7 +4,7 @@ type MissionOrbitItem struct {
 	MissionID uint `gorm:"primaryKey;autoIncrement:false"`
 	OrbitID   uint `gorm:"primaryKey;autoIncrement:false"`
 
-	Payload string `gorm:"type:varchar(255);not null"`
+	Payload float64
 
 	Velocity float64 // Скорость км/с
 	Period   float64 // Период мин
