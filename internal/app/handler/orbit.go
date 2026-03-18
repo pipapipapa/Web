@@ -58,7 +58,7 @@ func (h *Handler) ShowOrbitDetailPage(c *gin.Context) {
 		draftID = draft.ID
 	}
 
-	c.HTML(http.StatusOK, "detail.html", gin.H{
+	c.HTML(http.StatusOK, "orbit.html", gin.H{
 		"Orbit":        orbit,
 		"MissionCount": missionCount,
 		"MinioURL":     MinioBaseURL,
@@ -106,7 +106,7 @@ func (h *Handler) AddOrbitToMission(c *gin.Context) {
 		log.Println("Предупреждение:", err)
 	}
 
-	c.Redirect(http.StatusFound, "/mission/"+strconv.Itoa(int(mission.ID)))
+	c.Redirect(http.StatusFound, "/")
 }
 
 func (h *Handler) DeleteMission(c *gin.Context) {

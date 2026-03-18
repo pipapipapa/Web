@@ -14,15 +14,18 @@
         {{ if .DraftID }}
         <a href="/mission/{{ .DraftID }}" class="header-mission-link">
             <img src="/static/svgs/planet.svg" alt="Planet">
-            <span class="mission-label">Текущая миссия</span>
             <span class="mission-count">{{ .MissionCount }}</span>
         </a>
         {{ else if .MissionCount }}
         <a href="/mission/{{ .Mission.ID }}" class="header-mission-link">
             <img src="/static/svgs/planet.svg" alt="Planet">
-            <span class="mission-label">Текущая миссия</span>
             <span class="mission-count">{{ .MissionCount }}</span>
         </a>
+        {{ else }}
+        <div class="inactive-mission">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-count-inactive">{{ .MissionCount }}</span>
+        </div>
         {{ end }}
         <div class="spacer"></div>
     </div>
@@ -41,17 +44,6 @@
         </div>
         <div class="grid-spacer"></div>
         <div class="grid-spacer"></div>
-        <div>
-            <form action="/mission/add" method="POST" class="add-action-form">
-                    <input type="hidden" name="orbit_id" value="{{ .Orbit.ID }}">
-                    
-                    <div class="panel-controls">
-                        <button type="submit" class="calc-btn">
-                            ВКЛЮЧИТЬ В ПЛАН
-                        </button>
-                    </div>
-                </form>
-        </div>
     </div>  
 </body>
 </html>

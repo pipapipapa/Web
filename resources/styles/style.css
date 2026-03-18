@@ -618,3 +618,14 @@ header .home-btn:hover img {
 .mission-summary {
     padding: 20px;
 }
+
+.inactive-mission {
+    background: #000000;
+    border: 1px solid #ffffff66;
+    padding: 8px 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    opacity: 0.3;
+}

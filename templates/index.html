@@ -15,7 +15,6 @@
          {{ if .DraftID }}
         <a href="/mission/{{ .DraftID }}" class="header-mission-link">
             <img src="/static/svgs/planet.svg" alt="Planet">
-            <span class="mission-label">Текущая миссия</span>
             <span class="mission-count">{{ .MissionCount }}</span>
         </a>
         {{ else if .MissionCount }}
@@ -24,6 +23,11 @@
             <span class="mission-label">Текущая миссия</span>
             <span class="mission-count">{{ .MissionCount }}</span>
         </a>
+        {{ else }}
+        <div class="inactive-mission">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-count-inactive">{{ .MissionCount }}</span>
+        </div>
         {{ end }}
 
         <div class="spacer"></div>
@@ -41,13 +45,24 @@
         <div class="grid">
             {{ $base := .MinioURL }}
             {{ range .Orbits }}
+            <div>
             <a href="/orbit/{{ .ID }}" class="card orbit-card">
                 <img src="{{ $base }}{{ .ImageKey }}" alt="{{ .Name }}">
                 <div class="card-info">
                     <h3>{{ .Name }}</h3>
                     <p>Высота: ~{{ .AltitudeKm }} км</p>
                 </div>
+                    <form action="/mission/add" method="POST" class="add-action-form">
+                    <input type="hidden" name="orbit_id" value="{{ .ID }}">
+                    
+                    <div class="panel-controls">
+                        <button type="submit" class="calc-btn">
+                            ВКЛЮЧИТЬ В ПЛАН
+                        </button>
+                    </div>
+                </form>
             </a>
+            </div>
             {{ end }}
         </div>
     </div>
