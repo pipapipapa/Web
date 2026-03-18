@@ -15,8 +15,8 @@ func (h *Handler) RegisterAPI(router *gin.Engine) {
 	api.PUT("/mission-orbit-items", h.API_UpdateMissionOrbitItem)
 	api.DELETE("/mission-orbit-items", h.API_DeleteMissionOrbitItem)
 
-	api.GET("/missions/", h.API_GetMissionDraft)
-	api.GET("/mission", h.API_GetMissionsList)
+	api.GET("/mission", h.API_GetMissionDraft)
+	api.GET("/missions", h.API_GetMissionsList)
 	api.GET("/missions/:id", h.API_GetMissionDetail)
 	api.PUT("/missions/:id", h.API_UpdateMission)
 	api.PUT("/missions/:id/form", h.API_FormMission)
