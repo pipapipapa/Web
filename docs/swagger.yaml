@@ -1,0 +1,427 @@
+basePath: /api
+definitions:
+  internal_app_handler.M2MRequest:
+    properties:
+      orbit_id:
+        type: integer
+      payload_tons:
+        type: number
+    type: object
+  orbit-calc_internal_app_ds.User:
+    properties:
+      full_name:
+        type: string
+      id:
+        type: integer
+      login:
+        type: string
+      role:
+        description: '''CLIENT'', ''MODERATOR'''
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Сервис для планирования орбитальных миссий
+  title: Orbit Calculator API
+  version: "1.0"
+paths:
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин и пароль
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Возвращает JWT токен
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Аутентификация пользователя (получение JWT)
+      tags:
+      - Auth
+  /api/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Выход из системы (Добавление токена в Blacklist Redis)
+      tags:
+      - Auth
+  /api/mission:
+    get:
+      description: Возвращает ID черновика и количество услуг в нём.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить иконку корзины (Черновик)
+      tags:
+      - Missions
+  /api/mission-orbit-items:
+    delete:
+      consumes:
+      - application/json
+      description: Без передачи ID заявки, ищет по активному черновику.
+      parameters:
+      - description: orbit_id
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: integer
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Удалить услугу из заявки
+      tags:
+      - Mission-M2M
+    post:
+      consumes:
+      - application/json
+      description: Автоматически находит или создает черновик для текущего пользователя
+        по JWT.
+      parameters:
+      - description: Данные М-М (orbit_id, stage_order, payload)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_app_handler.M2MRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Добавить услугу в черновик
+      tags:
+      - Mission-M2M
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Обновленные данные
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_app_handler.M2MRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Изменить этап в черновике (нагрузку или порядок)
+      tags:
+      - Mission-M2M
+  /api/missions:
+    get:
+      description: Клиент видит только свои, модератор - все (кроме DELETED/DRAFT).
+      parameters:
+      - description: Фильтр по статусу (FORMED, COMPLETED)
+        in: query
+        name: status
+        type: string
+      - description: Дата от (YYYY-MM-DD)
+        in: query
+        name: date_from
+        type: string
+      - description: Дата до (YYYY-MM-DD)
+        in: query
+        name: date_to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить список заявок с фильтрацией
+      tags:
+      - Missions
+  /api/missions/{id}:
+    delete:
+      parameters:
+      - description: ID Заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Удалить заявку (SQL UPDATE)
+      tags:
+      - Missions
+    get:
+      parameters:
+      - description: ID Заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить заявку и её состав
+      tags:
+      - Missions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: satellite_mass_kg
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: integer
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Обновить массу спутника в заявке
+      tags:
+      - Missions
+  /api/missions/{id}/complete:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID Заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 'action: ACCEPT или REJECT'
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Завершить/Отклонить заявку (ТОЛЬКО МОДЕРАТОР)
+      tags:
+      - Missions
+  /api/missions/{id}/form:
+    put:
+      parameters:
+      - description: ID Заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Сформировать заявку (Переход из DRAFT в FORMED и расчеты)
+      tags:
+      - Missions
+  /api/orbits:
+    get:
+      description: Доступно всем (Гость). Возвращает список активных орбит.
+      parameters:
+      - description: Фильтр по названию
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить список услуг (орбит)
+      tags:
+      - Orbits
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Название
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Описание
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Высота орбиты (км)
+        in: formData
+        name: altitude_km
+        required: true
+        type: integer
+      - description: Изображение
+        in: formData
+        name: image
+        type: file
+      - description: Видео
+        in: formData
+        name: video
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Добавить новую орбиту (ТОЛЬКО МОДЕРАТОР)
+      tags:
+      - Orbits
+  /api/orbits/{id}:
+    get:
+      description: Доступно всем (Гость).
+      parameters:
+      - description: ID орбиты
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Детальная информация об орбите
+      tags:
+      - Orbits
+  /api/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные для регистрации (login, password, role)
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/orbit-calc_internal_app_ds.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Регистрация нового пользователя
+      tags:
+      - Auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

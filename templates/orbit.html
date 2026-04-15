@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Параметры орбиты</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+</head>
+<body class="vibes-page">
+    <header>
+        <a href="/" class="home-btn"><img src="/static/svgs/home.svg" alt="Home"></a>
+    </header>
+
+    <div class="toolbar">
+        <div class="spacer"></div>
+        {{ if .DraftID }}
+        <a href="/mission/{{ .DraftID }}" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-count">{{ .MissionCount }}</span>
+        </a>
+        {{ else if .MissionCount }}
+        <a href="/mission/{{ .Mission.ID }}" class="header-mission-link">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-count">{{ .MissionCount }}</span>
+        </a>
+        {{ else }}
+        <div class="inactive-mission">
+            <img src="/static/svgs/planet.svg" alt="Planet">
+            <span class="mission-count-inactive">{{ .MissionCount }}</span>
+        </div>
+        {{ end }}
+        <div class="spacer"></div>
+    </div>
+
+    <div class="detail-container">
+        <div class="grid-spacer"></div>
+
+        <div class="vibes-card">
+            <video autoplay muted loop playsinline class="bg-video">
+                <source src="{{ .MinioURL }}{{ .Orbit.VideoKey }}" type="video/mp4">
+            </video>
+            <div class="vibes-overlay">
+                <h1>{{ .Orbit.Name }}</h1>
+                <div class="stat-sub">{{ .Orbit.Description }} - {{ .Orbit.AltitudeKm }}, км</div>
+            </div>
+        </div>
+        <div class="grid-spacer"></div>
+        <div class="grid-spacer"></div>
+    </div>  
+</body>
+</html>
